@@ -1,7 +1,6 @@
 import ply.lex as lex
 
 # 1. Definición de Palabras Reservadas
-# Usamos un diccionario para buscar rápidamente si un identificador es una palabra clave.
 reserved = {
     'rubrica': 'RUBRICA',
     'criterio': 'CRITERIO',
@@ -12,20 +11,35 @@ reserved = {
 }
 
 # 2. Lista completa de Tokens
-# PLY requiere una tupla llamada 'tokens'. Sumamos las reservadas a los tokens básicos.
 tokens = (
-    'ID',
-    'NUMERO',
-    'CADENA',
-    'LBRACE',
-    'RBRACE',
-    'SEMI',
+    'ID', 'NUMERO', 'CADENA',
+    'LBRACE', 'RBRACE', 'SEMI',
+    'LPAREN', 'RPAREN', 'COMMA',
+    'MAS', 'MENOS', 'POR', 'DIV', # Aritméticos
+    'MENOR', 'MAYOR', 'MENORIGUAL', 'MAYORIGUAL', 'IGUAL', 'DISTINTO' # Relacionales
 ) + tuple(reserved.values())
 
 # 3. Reglas de Expresiones Regulares para tokens simples
 t_LBRACE = r'\{'
 t_RBRACE = r'\}'
 t_SEMI   = r';'
+t_LPAREN = r'\('
+t_RPAREN = r'\)'
+t_COMMA  = r','
+
+# Operadores Aritméticos
+t_MAS   = r'\+'
+t_MENOS = r'-'
+t_POR   = r'\*'
+t_DIV   = r'/'
+
+# Operadores Relacionales (Atención: los de 2 caracteres van antes que los de 1)
+t_IGUAL      = r'=='
+t_DISTINTO   = r'!='
+t_MENORIGUAL = r'<='
+t_MAYORIGUAL = r'>='
+t_MENOR      = r'<'
+t_MAYOR      = r'>'
 
 # Ignorar espacios en blanco y tabulaciones
 t_ignore = ' \t'
@@ -48,10 +62,20 @@ def t_ID(t):
     t.type = reserved.get(t.value, 'ID')
     return t
 
-# Regla para contar saltos de línea (fundamental para el reporte de errores)
+# Regla para contar saltos de línea
 def t_newline(t):
     r'\n+'
     t.lexer.lineno += len(t.value)
+
+def t_COMENTARIO_BLOQUE(t):
+    r'/\*(.|\n)*?\*/'
+    # Debemos contar cuántos saltos de línea hay dentro del comentario para que el contador de líneas global no se desajuste.
+    t.lexer.lineno += t.value.count('\n')
+    pass # No retornamos 't' porque los comentarios se ignoran
+
+def t_COMENTARIO_LINEA(t):
+    r'//.*'
+    pass
 
 # Función auxiliar para calcular la columna exacta
 def find_column(input_str, token):
