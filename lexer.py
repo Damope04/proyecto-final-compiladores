@@ -7,7 +7,9 @@ reserved = {
     'peso': 'PESO',
     'nivel': 'NIVEL',
     'total': 'TOTAL',
-    'descripcion': 'DESCRIPCION'
+    'descripcion': 'DESCRIPCION',
+    'numero': 'TIPO_NUMERO',
+    'si': 'SI' 
 }
 
 # 2. Lista completa de Tokens
