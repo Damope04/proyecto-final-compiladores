@@ -2,11 +2,12 @@ import ply.yacc as yacc
 # Importamos los tokens y el lexer que ya hiciste
 from lexer import tokens, find_column
 
+hubo_error_sintactico = False
 # ==========================================
 # PRECEDENCIA DE OPERADORES
 # ==========================================
 precedence = (
-    ('left', 'MAYOR', 'MENOR', 'MAYORIGUAL', 'MENORIGUAL', 'IGUAL', 'DISTINTO'),
+    ('left', 'MAYOR', 'MENOR', 'MAYORIGUAL', 'MENORIGUAL', 'IGUALDAD', 'DISTINTO'),
     ('left', 'MAS', 'MENOS'),
     ('left', 'POR', 'DIV'),
 )
@@ -120,8 +121,14 @@ def p_lista_niveles_unico(p):
     p[0] = [p[1]]
 
 def p_nivel(p):
-    'nivel : NIVEL CADENA NUMERO SEMI'
-    p[0] = NivelNode(p[2], p[3])
+    '''nivel : NIVEL CADENA NUMERO SEMI
+             | NIVEL CADENA MENOS NUMERO SEMI'''
+    if len(p) == 5:
+        # Caso positivo: nivel "excelente" 10;
+        p[0] = NivelNode(p[2], int(p[3]))
+    else:
+        # Caso negativo: nivel "malo" -2; (p[3] es el '-', p[4] es el número)
+        p[0] = NivelNode(p[2], -int(p[4]))
 
 def p_asignacion(p):
     'asignacion : ID IGUAL expresion SEMI'
@@ -140,7 +147,7 @@ def p_expresion_binaria(p):
                  | expresion MENOR expresion
                  | expresion MAYORIGUAL expresion
                  | expresion MENORIGUAL expresion
-                 | expresion IGUAL expresion
+                 | expresion IGUALDAD expresion
                  | expresion DISTINTO expresion'''
     p[0] = OpBinariaNode(p[1], p[2], p[3])
 
@@ -162,6 +169,8 @@ def p_sentencia_error(p):
     p[0] = None  # Devolvemos None para no meter basura al AST
 
 def p_error(p):
+    global hubo_error_sintactico
+    hubo_error_sintactico = True
     if p:
         columna = find_column(p.lexer.lexdata, p)
         print(f"Error sintáctico [línea {p.lineno}, columna {columna}]: token inesperado '{p.value}'")

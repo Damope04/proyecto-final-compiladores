@@ -18,7 +18,8 @@ tokens = (
     'LBRACE', 'RBRACE', 'SEMI',
     'LPAREN', 'RPAREN', 'COMMA',
     'MAS', 'MENOS', 'POR', 'DIV', # Aritméticos
-    'MENOR', 'MAYOR', 'MENORIGUAL', 'MAYORIGUAL', 'IGUAL', 'DISTINTO' # Relacionales
+    'IGUAL', # Asignación
+    'MENOR', 'MAYOR', 'MENORIGUAL', 'MAYORIGUAL', 'IGUALDAD', 'DISTINTO' # Relacionales
 ) + tuple(reserved.values())
 
 # 3. Reglas de Expresiones Regulares para tokens simples
@@ -29,6 +30,9 @@ t_LPAREN = r'\('
 t_RPAREN = r'\)'
 t_COMMA  = r','
 
+# Operador de Asignación (¡Este es el que te faltaba para x = 10!)
+t_IGUAL  = r'='
+
 # Operadores Aritméticos
 t_MAS   = r'\+'
 t_MENOS = r'-'
@@ -36,7 +40,7 @@ t_POR   = r'\*'
 t_DIV   = r'/'
 
 # Operadores Relacionales (Atención: los de 2 caracteres van antes que los de 1)
-t_IGUAL      = r'=='
+t_IGUALDAD      = r'=='
 t_DISTINTO   = r'!='
 t_MENORIGUAL = r'<='
 t_MAYORIGUAL = r'>='
