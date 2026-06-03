@@ -1,0 +1,5 @@
+numero x = 10;
+// Error sintáctico intencional: falta la palabra clave 'peso' y el bloque '{ }'
+rubrica examen {
+    criterio programacion 50; 
+}

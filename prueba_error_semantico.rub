@@ -1,0 +1,13 @@
+numero x = 10;
+x = 20;
+y = 5;  // ERROR SEMÁNTICO: 'y' no está declarada
+
+rubrica evaluacion_web {
+    criterio frontend peso 50 {
+        nivel "excelente" 10;
+        nivel "malo" -2;  // ERROR SEMÁNTICO: puntos negativos
+    };
+    criterio backend peso 60 { // ERROR SEMÁNTICO: 50 + 60 = 110 (No suma 100)
+        nivel "bueno" 8;
+    };
+}

@@ -14,12 +14,12 @@ class AnalizadorSemantico:
         self.visit(ast)
         
         if self.errores:
-            print("\n❌ Se encontraron errores semánticos:")
+            print("\n Se encontraron errores semánticos:")
             for error in self.errores:
                 print(f"  - {error}")
             return False
         else:
-            print("\n✅ ¡Análisis semántico completado sin errores!")
+            print("\n ¡Análisis semántico completado sin errores!")
             print("Tabla de símbolos final:", self.tabla_simbolos)
             return True
 
@@ -109,4 +109,4 @@ if __name__ == '__main__':
         analizador = AnalizadorSemantico()
         analizador.analizar(ast)
     else:
-        print("\n❌ El análisis semántico no se ejecutó debido a errores en las fases previas (Léxico/Sintáctico).")
+        print("\n El análisis semántico no se ejecutó debido a errores en las fases previas (Léxico/Sintáctico).")
